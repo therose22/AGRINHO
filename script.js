@@ -57,15 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Adiciona palavras à lista
+    // Adiciona palavras à lista e adiciona a função de riscar
     function renderWordList(words) {
         words.forEach(word => {
             const li = document.createElement("li");
             li.textContent = word;
+            li.addEventListener("click", () => {
+                li.style.textDecoration = "line-through"; // Risca a palavra
+            });
             wordList.appendChild(li);
         });
     }
-    
+
     const grid = createGrid();
     renderGrid(grid);
     renderWordList(words);
