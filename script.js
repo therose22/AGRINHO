@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const words = ["VACAS", "POPS", "GALINHA", "PORCO", "CAVALO", "CARNEIRO", "OVELHA", "CEBOLA", "ALFACE", "MILHO"];
+    const words = ["VACA", "TOMATE", "GALINHA", "PORCO", "CAVALO", "CARNEIRO", "OVELHA", "CEBOLA", "ALFACE", "MILHO", "FAZENDA", "AGRINHO"];
     const gridSize = 10;
     const gridContainer = document.querySelector(".grid-container");
     const wordList = document.getElementById("word-list");
@@ -65,7 +65,39 @@ document.addEventListener("DOMContentLoaded", () => {
             wordList.appendChild(li);
         });
     }
+    
+// Event listener para clicar nas células da tabela
+    wordsearchGrid.addEventListener("click", function (e) {
+        if (e.target.tagName === "TD") {
+            const cell = e.target;
+            selectedWord += cell.textContent;
+            selectedCells.push(cell);
+            cell.classList.add("selected");
 
+            checkWord();
+        }
+    });
+
+    function checkWord() {
+        const words = Array.from(wordList.getElementsByTagName("li"));
+        for (let word of words) {
+            if (word.textContent === selectedWord) {
+                word.style.textDecoration = "line-through"; // Risca a palavra da lista
+                word.style.color = "gray"; // Opcional: muda a cor para cinza
+                clearSelection();
+                return;
+            }
+        }
+    }
+
+    function clearSelection() {
+        selectedCells.forEach(cell => cell.classList.remove("selected"));
+        selectedCells = [];
+        selectedWord = "";
+    }
+
+    document.addEventListener("dblclick", clearSelection);
+});
     const grid = createGrid();
     renderGrid(grid);
     renderWordList(words);
