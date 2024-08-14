@@ -1,75 +1,63 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const words = ["VACA", "TOMATE", "GALINHA", "PORCO", "CAVALO", "CARNEIRO", "OVELHA", "CEBOLA", "ALFACE", "MILHO", "FAZENDA", "AGRINHO"];
-    const gridSize = 10;
-    const gridContainer = document.querySelector(".grid-container");
-    const wordList = document.getElementById("word-list");
+// script.js
 
-    // Função para criar a grade do caça-palavras
-    function createGrid() {
-        let grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.querySelector('.grid');
+    const wordListItems = document.querySelectorAll('.word-list .word');
+    let isSelecting = false;
+    let selectedCells = [];
 
-        // Adiciona palavras na grade
-        function addWord(word) {
-            let direction = Math.random() < 0.5 ? "H" : "V";
-            let row, col;
+    grid.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'SPAN') {
+            isSelecting = true;
+            selectCell(e.target);
+            selectedCells = [e.target];
+        }
+    });
 
-            if (direction === "H") {
-                row = Math.floor(Math.random() * gridSize);
-                col = Math.floor(Math.random() * (gridSize - word.length));
-            } else {
-                row = Math.floor(Math.random() * (gridSize - word.length));
-                col = Math.floor(Math.random() * gridSize);
-            }
-
-            for (let i = 0; i < word.length; i++) {
-                if (direction === "H") {
-                    grid[row][col + i] = word[i];
-                } else {
-                    grid[row + i][col] = word[i];
-                }
+    grid.addEventListener('mouseover', (e) => {
+        if (isSelecting && e.target.tagName === 'SPAN') {
+            if (!selectedCells.includes(e.target)) {
+                selectCell(e.target);
+                selectedCells.push(e.target);
             }
         }
+    });
 
-        words.forEach(addWord);
+    grid.addEventListener('mouseup', () => {
+        isSelecting = false;
+        checkWord(selectedCells);
+        selectedCells = [];
+    });
 
-        // Preenche espaços vazios com letras aleatórias
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (let r = 0; r < gridSize; r++) {
-            for (let c = 0; c < gridSize; c++) {
-                if (grid[r][c] === "") {
-                    grid[r][c] = letters.charAt(Math.floor(Math.random() * letters.length));
+    function selectCell(cell) {
+        cell.classList.toggle('selected');
+    }
+
+    function checkWord(cells) {
+        if (cells.length === 0) return;
+
+        const word = cells.map(cell => cell.textContent).join('');
+        const words = ['SEMENTE', 'PLANTIO', 'COLHEITA', 'HORTA', 'FAZENDA', 'SOLO', 'ANIMAL', 'TRACTOR', 'CULTIVO', 'ADUBO', 'TOMATE', 'PORCO'];
+
+        // Remove a classe 'selected' de todas as células antes de destacar
+        document.querySelectorAll('.grid span').forEach(span => {
+            span.classList.remove('selected');
+        });
+
+        // Verifica se a palavra é válida
+        if (words.includes(word)) {
+            cells.forEach(cell => cell.classList.add('correct'));
+            alert(`Você encontrou a palavra: ${word}`);
+
+            // Atualiza a lista de palavras encontradas
+            wordListItems.forEach(item => {
+                if (item.textContent === word) {
+                    item.classList.add('found');
                 }
-            }
+            });
+        } else {
+            // Desmarcar células se não for uma palavra válida
+            cells.forEach(cell => cell.classList.remove('selected'));
         }
-
-        return grid;
     }
-
-    // Renderiza a grade no HTML
-    function renderGrid(grid) {
-        grid.forEach(row => {
-            row.forEach(cell => {
-                const div = document.createElement("div");
-                div.className = "grid-item";
-                div.textContent = cell;
-                gridContainer.appendChild(div);
-            });
-        });
-    }
-
-    // Adiciona palavras à lista e adiciona a função de riscar
-    function renderWordList(words) {
-        words.forEach(word => {
-            const li = document.createElement("li");
-            li.textContent = word;
-            li.addEventListener("click", () => {
-                li.style.textDecoration = "line-through"; // Risca a palavra
-            });
-            wordList.appendChild(li);
-        });
-    }
-
-    const grid = createGrid();
-    renderGrid(grid);
-    renderWordList(words);
 });
