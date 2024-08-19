@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cells.length === 0) return;
 
         const word = cells.map(cell => cell.textContent).join('');
-        const words = ['SEMENTE', 'PLANTIO', 'COLHEITA', 'HORTA', 'FAZENDA', 'SOLO', 'ANIMAL', 'TRACTOR', 'CULTIVO', 'ADUBO', 'TOMATE', 'PORCO'];
+        const words = ['SEMENTE', 'PLANTIO', 'COLHEITA', 'HORTA', 'FAZENDA', 'SOLO', 'ANIMAL', 'TRATOR', 'CULTIVO', 'ADUBO', 'TOMATE', 'PORCO'];
 
         // Remove a classe 'selected' de todas as células antes de destacar
         document.querySelectorAll('.grid span').forEach(span => {
